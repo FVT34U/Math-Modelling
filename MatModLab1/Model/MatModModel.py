@@ -3,7 +3,7 @@ import plotly.graph_objs as go
 
 
 class MatModModel:
-    def __init__(self, m=None, x=None, y=None, v_x=None, v_y=None, total_time=None, step=None):
+    def __init__(self, m=None, x=None, y=None, v_x=None, v_y=None, G=None, total_time=None, step=None):
         if m is None:
             m = [1.2166e+30, ]
         if y is None:
@@ -16,6 +16,8 @@ class MatModModel:
             total_time = 0
         if step is None:
             step = 1
+        if G is None:
+            G = 6.67e-11
 
         self._mObservers = []
 
@@ -28,7 +30,7 @@ class MatModModel:
         self.time_step = step
         self.n = total_time // step
 
-        self.G_const = 6.67e-11
+        self.G_const = G
 
         self.scheme = ''
 
@@ -262,7 +264,7 @@ class MatModModel:
             vysc[i] = vxs[0]
         return xs, ys, vxsc, vysc
 
-    def setSettings(self, _m, _x, _y, _v_x, _v_y, _total_time, _step, _scheme):
+    def setSettings(self, _m, _x, _y, _v_x, _v_y, _G, _total_time, _step, _scheme):
         self.mass = np.copy(_m)
         self.x = np.copy(_x)
         self.y = np.copy(_y)
@@ -272,6 +274,7 @@ class MatModModel:
         self.time_step = _step
         self.scheme = _scheme
         self.n = self.total_time // self.time_step
+        self.G_const = _G
 
         if self.scheme == 'Эйлера':
             self.make_figure(self.euler_scheme())
@@ -301,7 +304,7 @@ class MatModModel:
         yy = scheme[1][:, -1]
         rx = xx[1:] - xx[0]
         ry = yy[1:] - yy[0]
-        potential = 6.67e-11 * (np.sum(self.mass[1:] / (rx**2 + ry**2)**0.5)) * self.mass[0]
+        potential = self.G_const * (np.sum(self.mass[1:] / (rx**2 + ry**2)**0.5)) * self.mass[0]
         energy = kinetic - potential
 
         for i in range(self.n):

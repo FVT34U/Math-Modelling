@@ -26,6 +26,7 @@ class MatModController:
         y = []
         v_x = []
         v_y = []
+        G = float(self.mView.ui.system_parameters.lineEdit_new.text())
 
         for j in range(0, 5):
             for i in range(self.mView.ui.system_parameters.num_of_planets):
@@ -48,9 +49,10 @@ class MatModController:
             "y": y,
             "v_x": v_x,
             "v_y": v_y,
-            "m": m
+            "m": m,
+            "G": G
         }
 
         self.mView.ui.system_parameters.close()
 
-        self.mModel.setSettings(m, x, y, v_x, v_y, total_time, step, scheme)
+        self.mModel.setSettings(m, x, y, v_x, v_y, G, total_time, step, scheme)

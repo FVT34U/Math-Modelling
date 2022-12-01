@@ -167,7 +167,6 @@ class SystemParametersWindow(QtWidgets.QDialog):
         self.pushButton = QtWidgets.QPushButton(self.verticalLayoutWidget)
         self.pushButton.setObjectName("pushButton")
         self.horizontalLayout.addWidget(self.pushButton)
-
         self.verticalLayout_2 = QtWidgets.QVBoxLayout()
         self.verticalLayout_2.setObjectName("verticalLayout_2")
         self.label_2 = QtWidgets.QLabel(self.verticalLayoutWidget)
@@ -197,6 +196,20 @@ class SystemParametersWindow(QtWidgets.QDialog):
         self.comboBox.addItem("")
         self.verticalLayout_3.addWidget(self.comboBox)
         self.horizontalLayout.addLayout(self.verticalLayout_3)
+
+        self.verticalLayout_new = QtWidgets.QVBoxLayout(self.verticalLayoutWidget)
+        self.verticalLayout_new.setObjectName("verticalLayoutNew")
+        self.label_new = QtWidgets.QLabel(self.verticalLayoutWidget)
+        self.label_new.setObjectName("labelNew")
+        self.label_new.setText('Выберите G')
+        self.verticalLayout_new.addWidget(self.label_new)
+        self.lineEdit_new = QtWidgets.QLineEdit(self.verticalLayoutWidget)
+        self.lineEdit_new.setObjectName("lineEditNew")
+        self.lineEdit_new.setText('6.67e-11')
+        self.verticalLayout_new.addWidget(self.lineEdit_new)
+
+        self.horizontalLayout.addLayout(self.verticalLayout_new)
+
         self.verticalLayout.addLayout(self.horizontalLayout)
         self.tableWidget = QtWidgets.QTableWidget(self.verticalLayoutWidget)
         self.tableWidget.setObjectName("tableWidget")
@@ -237,6 +250,7 @@ class SystemParametersWindow(QtWidgets.QDialog):
         v_x = np.zeros((self.num_of_planets, 1))
         v_y = np.zeros((self.num_of_planets, 1))
         m = np.zeros((self.num_of_planets, 1))
+        G = 6.67e-11
 
         for j in range(0, 5):
             for i in range(0, self.num_of_planets):
@@ -259,7 +273,8 @@ class SystemParametersWindow(QtWidgets.QDialog):
             "y": y,
             "v_x": v_x,
             "v_y": v_y,
-            "m": m
+            "m": m,
+            "G": G
         }
 
         self.data = data        
@@ -276,12 +291,15 @@ class SystemParametersWindow(QtWidgets.QDialog):
         self.tableWidget.setColumnCount(5)
         self.tableWidget.setRowCount(num_of_planets)
 
+        self.lineEdit_new.setText("6.67e-11")
+
         x = np.zeros((self.num_of_planets, 1))
         print(x)
         y = np.zeros((self.num_of_planets, 1))
         v_x = np.zeros((self.num_of_planets, 1))
         v_y = np.zeros((self.num_of_planets, 1))
         m = np.zeros((self.num_of_planets, 1))
+        G = 6.67e-11
 
         for j in range(0, 5):
             for i in range(0, num_of_planets):
@@ -319,7 +337,8 @@ class SystemParametersWindow(QtWidgets.QDialog):
             "y": y,
             "v_x": v_x,
             "v_y": v_y,
-            "m": m
+            "m": m,
+            "G": G
         }
 
         self.data = data
@@ -330,6 +349,7 @@ class SystemParametersWindow(QtWidgets.QDialog):
 
         self.lineEdit.setText(str(self.data["time_step"]))
         self.lineEdit_2.setText(str(self.data["total_time"]))
+        self.lineEdit_new.setText(str(self.data["G"]))
 
         for j in range(0, 5):
             for i in range(0, self.num_of_planets):
