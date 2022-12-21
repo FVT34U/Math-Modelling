@@ -20,6 +20,9 @@ class MatModModel:
         self.pops_num = len(self.number)
         self.new_number = np.copy(self.number)
 
+        self.epidemic = True
+        self.epidemic_chance = 0.01
+
     def get_value(self):
         """
         Возвращает значения для всех популяций на одном временном слое
@@ -31,9 +34,24 @@ class MatModModel:
                 if i != j:
                     f += self.matrix[i][j] * self.new_number[i] * self.new_number[j]
             value = self.new_number[i] + (self.up[i] * self.new_number[i] + f) * self.dif_step
-            if value < 2:
-                value = 0
+            #if value < 2:
+                #value = 0
             res.append(value)
+
+        """
+        Код для эпидемии
+        """
+        if self.epidemic:
+            if np.random.random() <= self.epidemic_chance:
+                while(True):
+                    index = np.random.default_rng().integers(self.pops_num, size=1)[0]
+                    if bool(np.isclose(res, 0.0).all()):
+                        break
+                    if res[index] > 0.0:
+                        res[index] /= 2.0
+                        break
+                print("EPIDEMIC!!!", index)
+
         self.new_number = np.copy(res)
         return res
 
@@ -107,7 +125,7 @@ class MatModModel:
                              go.Scatter(x=data[0][:], y=data[1][:],
                                         mode='lines',
                                         line=dict(width=2),
-                                        name='')])
+                                        name='Значение')])
 
         fg.update_layout(title={"font": dict(size=20), "text": "Популяция"})
 
