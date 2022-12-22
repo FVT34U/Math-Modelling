@@ -101,68 +101,28 @@ class MatModModel:
         return num, r, efficiency, busy_lines, time_points, graphs
 
     def make_figure(self, count, rej, eff, busy, x, y):
-        fg = go.Figure(data=[go.Scatter(x=x, y=y[i % self.lines_number],
+        fg = go.Figure(data=[go.Scatter(x=x, y=y[i],
                                         mode='lines',
-                                        line=dict(width=2),
-                                        name='Значение') for i in range(0, self.lines_number * 2)])
+                                        line=dict(width=5),
+                                        name='Линия ' + str(i + 1)) for i in range(0, self.lines_number)]
+                       + [go.Scatter(x=x, y=y,
+                                     mode='text',
+                                     line=dict(width=5),
+                                     name='Число вызовов: ' + str(count))]
+                       + [go.Scatter(x=x, y=y,
+                                     mode='text',
+                                     line=dict(width=5),
+                                     name='Загруженные линии: ' + str(busy))]
+                       + [go.Scatter(x=x, y=y,
+                                     mode='text',
+                                     line=dict(width=5),
+                                     name='Отклонённые отзывы: ' + str(rej))]
+                       + [go.Scatter(x=x, y=y,
+                                     mode='text',
+                                     line=dict(width=5),
+                                     name='Эффективность: ' + str(eff))])
 
-        fg.update_layout(title={"font": dict(size=20), "text": "Популяция"})
-
-        steps = []
-        frames = []
-
-        for i in range(self.total_time):
-            name = 'Число вызовов: {}, Загруженные линии: {},' \
-                   '\nОтклонённые вызовы: {}, Эффективность {}'.format(count, busy, rej, eff)
-
-            step = dict(
-                label=name,
-                method="animate",
-                args=[[name],
-                      {"frame": {"duration": 1, "redraw": False},
-                       "mode": "immediate",
-                       "transition": {"duration": 1}}
-                      ])
-            steps.append(step)
-
-            frame = dict(
-                data=[go.Scatter(
-                    x=x,
-                    y=y[k][[i]],
-                    mode='markers',
-                    marker=dict(size=20),
-                    name='') for k in range(0, self.lines_number)
-                ],
-                name=name
-            )
-            frames.append(frame)
-
-        sliders = [dict(
-            len=0.9,
-            x=0.1,
-            pad={"b": 10, "t": 50},
-            transition={"duration": 1, "easing": "cubic-in-out"},
-            steps=steps,
-        )]
-
-        fg.update_layout(updatemenus=[dict(type='buttons',
-                                           buttons=[dict(label='Play',
-                                                         method='animate',
-                                                         args=[None, {"frame": {"duration": 1, "redraw": False},
-                                                                      "mode": "immediate",
-                                                                      "fromcurrent": True, "transition": {"duration": 1,
-                                                                                                          "easing": "quadratic-in-out"}}]),
-                                                    dict(label='Pause',
-                                                         method='animate',
-                                                         args=[[None], {"frame": {"duration": 0, "redraw": False},
-                                                                        "mode": "immediate",
-                                                                        "transition": {"duration": 0}}]),
-                                                    dict(label='Reset',
-                                                         method='animate',
-                                                         args=[None])])])
-
-        fg.layout.sliders = sliders
-        fg.frames = frames
+        fg.update_layout(title={"font": dict(size=20), "text": "Система"})
 
         self.fig = fg
 
